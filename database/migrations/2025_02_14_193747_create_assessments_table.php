@@ -10,12 +10,26 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        // assessments (header)
         Schema::create('assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->nullable()->constrained('students');
-//            $table->foreignId('room_id')->nullable()->constrained('rooms')->onDelete('cascade');
+            $table->foreignId('lecturer_id')->nullable()->constrained('users');
+            $table->string('type')->default('supervisor'); // supervisor/examiner
             $table->string('assessment_stage')->nullable();
-            $table->json('assessment')->nullable();
+            $table->timestamps();
+        });
+
+        // assessment_items (detail per kriteria)
+        Schema::create('assessment_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('assessment_id')
+                  ->constrained('assessments')
+                  ->onDelete('cascade');
+            $table->string('label');       // contoh: ZONING, LANDSCAPE, dll.
+            $table->text('criteria');      // indikator penilaian
+            $table->integer('score')->default(0);
+            $table->text('description')->nullable(); // catatan dosen
             $table->timestamps();
         });
     }
@@ -25,6 +39,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('assessment_items');
         Schema::dropIfExists('assessments');
     }
 };

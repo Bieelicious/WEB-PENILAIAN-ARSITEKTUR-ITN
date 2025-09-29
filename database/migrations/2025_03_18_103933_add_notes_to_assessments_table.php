@@ -6,25 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('assessments', function (Blueprint $table) {
-            $table->text('notes')->nullable()->after('assessment');
-            $table->string('type')->default('supervisor');
+            if (!Schema::hasColumn('assessments', 'notes')) {
+                $table->text('notes')->nullable();
+            }
+            if (!Schema::hasColumn('assessments', 'type')) {
+                $table->string('type')->default('supervisor');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('assessments', function (Blueprint $table) {
-            $table->dropColumn('notes');
-            $table->dropColumn('type');
+            if (Schema::hasColumn('assessments', 'notes')) {
+                $table->dropColumn('notes');
+            }
+            if (Schema::hasColumn('assessments', 'type')) {
+                $table->dropColumn('type');
+            }
         });
     }
 };
+

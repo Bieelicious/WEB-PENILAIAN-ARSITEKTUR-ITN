@@ -34,38 +34,44 @@
 </head>
 <body>
 <h1>Data Nilai Mahasiswa</h1>
-<table>
+<table border="1" style="border-collapse: collapse; width: 100%;">
     <thead>
-    <tr>
-        <th>No</th>
-        <th>Nama</th>
-        <th>NIM</th>
-        <th>Judul Proposal Tugas Akhir</th>
-        <th>Tema Rancangan</th>
-        <th>Kelompok</th>
-        <th>Tahap Penilaian</th>
-        <th>Dosen Penilai</th>
-        <th>Nilai</th>
-        <th>Catatan</th>
-    </tr>
+        <tr>
+            <th>Name</th>
+            <th>NIM</th>
+            <th>Title</th>
+            <th>Design Theme</th>
+            <th>Group</th>
+            <th>Assessment Stage</th>
+            <th>Lecturer</th>
+            <th>Score</th>
+            <th>Notes</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach ($records as $index => $record)
-        <tr>
-            <td>{{ $index + 1 }}</td>
-            <td>{{ $record->student->name }}</td>
-            <td>{{ $record->student->nim }}</td>
-            <td>{{ $record->student->title_of_the_final_project_proposal }}</td>
-            <td>{{ $record->student->design_theme }}</td>
-            <td>{{ $record->student->group->name }}</td>
-            <td>{{ $record->assessment_stage }}</td>
-            <td>{{ $record->user->name }}</td>
-            <td>{{ is_array($record->assessment) ? implode(', ', $record->assessment) : $record->assessment }}</td>
-            <td>{{ $record->notes}}</td>
-
-
-        </tr>
-    @endforeach
+        @foreach($records as $assessment)
+            <tr>
+                <td>{{ optional($assessment->student)->name ?? '-' }}</td>
+                <td>{{ optional($assessment->student)->nim ?? '-' }}</td>
+                <td>{{ optional($assessment->student)->title_of_the_final_project_proposal ?? '-' }}</td>
+                <td>{{ optional($assessment->student)->design_theme ?? '-' }}</td>
+                <td>{{ optional($assessment->student->group)->name ?? '-' }}</td>
+                <td>{{ $assessment->assessment_stage ?? '-' }}</td>
+                <td>{{ optional($assessment->user)->name ?? '-' }}</td>
+                <td>
+                    @php
+                        $total = 0;
+                        if(is_array($assessment->assessment)) {
+                            foreach($assessment->assessment as $a) {
+                                $total += $a['score'] ?? 0;
+                            }
+                        }
+                        echo $total;
+                    @endphp
+                </td>
+                <td>{{ $assessment->notes ?? '-' }}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
 </body>

@@ -5,7 +5,6 @@ namespace App\Jobs;
 use Carbon\Carbon;
 use App\Models\Assessment;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\SendExportNotificationJob;
 use Filament\Notifications\Notification;
@@ -15,29 +14,22 @@ use OpenSpout\Common\Entity\Row;
 use OpenSpout\Writer\XLSX\Writer;
 use OpenSpout\Writer\XLSX\Options;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use OpenSpout\Common\Entity\Style\CellAlignment;
 use App\Traits\EnsureExportDirectory;
 
-class ExportExcelJob implements ShouldQueue
+class ExportExcelJob
 {
     use Queueable, EnsureExportDirectory;
 
     protected array $studentIds;
     protected $user;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(array $studentIds, $user)
     {
         $this->studentIds = $studentIds;
         $this->user = $user;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         Log::info('Starting Excel export');
@@ -62,7 +54,9 @@ class ExportExcelJob implements ShouldQueue
 
             Log::info('Excel file generated successfully');
 
-            $this->dispatchNotificationJob($filename);
+            // kirim notifikasi langsung (tidak pakai queue chain)
+            (new SendExportNotificationJob($this->user, $filename, 'excel'))->handle();
+
         } catch (\Exception $e) {
             Log::error('Excel export failed', ['error' => $e->getMessage()]);
             throw $e;
@@ -71,20 +65,17 @@ class ExportExcelJob implements ShouldQueue
 
     private function fetchRecords(): Collection
     {
-        if (empty($this->studentIds)) {
-            return Assessment::with(['student'])->get();
+        $query = Assessment::with(['student']);
+
+        if (!empty($this->studentIds)) {
+            $query->whereIn('student_id', $this->studentIds);
         }
 
-        return Assessment::with(['student'])
-            ->whereIn('student_id', $this->studentIds)
-            ->get();
+        return $query->get();
     }
 
     private function handleNoRecordsFound(): void
     {
-        $studentIds = empty($this->studentIds) ? 'ALL_STUDENTS' : implode(', ', $this->studentIds);
-
-        Log::info('No records found for selected student IDs: ' . implode(', ', $this->studentIds));
         $this->user->notify(
             Notification::make()
                 ->title('No Data Available')
@@ -97,30 +88,39 @@ class ExportExcelJob implements ShouldQueue
 
     private function generateFilename(): string
     {
-        return 'exports/students_assessments-' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
+        return 'exports/assessments-' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
     }
 
     private function getHeader(): array
-    {
-        return ['Nama', 'NIM', 'Judul Proposal Tugas Akhir', 'Tema Rancangan', 'Kelompok', 'Tahap Penilaian', 'Dosen Penilai', 'Nilai', 'Catatan'];
-    }
+{
+    return [
+        'Nama Mahasiswa',
+        'Judul Proposal',
+        'Assessment Stage',
+        'Kriteria',
+        'Indikator',
+        'Nilai',
+        'Catatan',
+    ];
+}
 
-    private function prepareRows(Collection $records): Collection
-    {
-        return $records->map(function ($assessment) {
+private function prepareRows(Collection $records): Collection
+{
+    return $records->flatMap(function ($assessment) {
+        return $assessment->items->map(function ($item) use ($assessment) {
             return [
                 optional($assessment->student)->name ?? '-',
-                optional($assessment->student)->nim ?? '-',
                 optional($assessment->student)->title_of_the_final_project_proposal ?? '-',
-                optional($assessment->student)->design_theme ?? '-',
-                optional($assessment->group)->name ?? '-',
                 $assessment->assessment_stage ?? '-',
-                optional($assessment->user)->name ?? '-',
-                is_array($assessment->assessment) ? implode(', ', $assessment->assessment) : json_encode($assessment->assessment),
-                $assessment->notes ?? '-',
+                $item->label ?? '-',       // Kriteria
+                $item->criteria ?? '-',    // Indikator
+                $item->score ?? '-',       // Nilai
+                $item->description ?? '-', // Catatan dari item
             ];
         });
-    }
+    });
+}
+
 
     private function createExcelFileWithOpenSpout(string $filename, array $header, Collection $rows): void
     {
@@ -131,17 +131,10 @@ class ExportExcelJob implements ShouldQueue
         $writer = new Writer($options);
         $writer->openToFile($filename);
 
+        // Header
         $headerRow = Row::fromValues($header);
         $headerRow->setStyle($styleHeader);
         $writer->addRow($headerRow);
-        $options->setColumnWidth(30, 1);
-        $options->setColumnWidth(30, 2);
-        $options->setColumnWidth(30, 3);
-        $options->setColumnWidth(30, 4);
-        $options->setColumnWidth(30, 5);
-        $options->setColumnWidth(30, 6);
-        $options->setColumnWidth(30, 7);
-        $options->setColumnWidthForRange(25, 1, 9);
 
         foreach ($rows as $rowValues) {
             $row = Row::fromValues($rowValues);
@@ -156,22 +149,14 @@ class ExportExcelJob implements ShouldQueue
     {
         return (new Style())
             ->setFontBold()
-            ->setFontSize(14)
+            ->setFontSize(13)
             ->setCellAlignment(CellAlignment::CENTER)
             ->setFontColor(Color::WHITE)
-            ->setBackgroundColor(Color::BLACK);
+            ->setBackgroundColor(Color::DARK_BLUE);
     }
 
     private function getCellStyle(): Style
     {
-        return (new Style())
-            ->setFontSize(12);
-    }
-
-    private function dispatchNotificationJob(string $filename): void
-    {
-        Bus::chain([
-            new SendExportNotificationJob($this->user, $filename, 'excel'),
-        ])->dispatch();
+        return (new Style())->setFontSize(12);
     }
 }
