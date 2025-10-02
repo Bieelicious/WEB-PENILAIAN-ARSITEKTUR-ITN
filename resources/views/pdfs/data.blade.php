@@ -16,13 +16,13 @@
         }
 
         th, td {
-            padding: 2px;
+            padding: 4px;
             text-align: left;
         }
 
         th {
             text-align: center;
-            background-color: #4CAF50;
+            background-color: #f78c00ff;
             color: black;
         }
 
@@ -37,40 +37,36 @@
 <table border="1" style="border-collapse: collapse; width: 100%;">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Nama Mahasiswa</th>
             <th>NIM</th>
-            <th>Title</th>
+            <th>Judul Proposal</th>
             <th>Design Theme</th>
             <th>Group</th>
             <th>Assessment Stage</th>
-            <th>Lecturer</th>
-            <th>Score</th>
-            <th>Notes</th>
+            <th>Dosen</th>
+            <th>Kriteria</th>
+            <th>Nilai</th>
+            <th>Catatan Item</th>
+            <th>Catatan Umum</th>
         </tr>
     </thead>
     <tbody>
         @foreach($records as $assessment)
-            <tr>
-                <td>{{ optional($assessment->student)->name ?? '-' }}</td>
-                <td>{{ optional($assessment->student)->nim ?? '-' }}</td>
-                <td>{{ optional($assessment->student)->title_of_the_final_project_proposal ?? '-' }}</td>
-                <td>{{ optional($assessment->student)->design_theme ?? '-' }}</td>
-                <td>{{ optional($assessment->student->group)->name ?? '-' }}</td>
-                <td>{{ $assessment->assessment_stage ?? '-' }}</td>
-                <td>{{ optional($assessment->user)->name ?? '-' }}</td>
-                <td>
-                    @php
-                        $total = 0;
-                        if(is_array($assessment->assessment)) {
-                            foreach($assessment->assessment as $a) {
-                                $total += $a['score'] ?? 0;
-                            }
-                        }
-                        echo $total;
-                    @endphp
-                </td>
-                <td>{{ $assessment->notes ?? '-' }}</td>
-            </tr>
+            @foreach($assessment->items as $item)
+                <tr>
+                    <td>{{ optional($assessment->student)->name ?? '-' }}</td>
+                    <td>{{ optional($assessment->student)->nim ?? '-' }}</td>
+                    <td>{{ optional($assessment->student)->title_of_the_final_project_proposal ?? '-' }}</td>
+                    <td>{{ optional($assessment->student)->design_theme ?? '-' }}</td>
+                    <td>{{ optional($assessment->student->group)->name ?? '-' }}</td>
+                    <td>{{ $assessment->assessment_stage ?? '-' }}</td>
+                    <td>{{ optional($assessment->user)->name ?? '-' }}</td>
+                    <td>{{ $item->label ?? '-' }}</td>
+                    <td>{{ $item->score ?? '-' }}</td>
+                    <td>{{ $item->description ?? '-' }}</td>
+                    <td>{{ $assessment->notes ?? '-' }}</td>
+                </tr>
+            @endforeach
         @endforeach
     </tbody>
 </table>

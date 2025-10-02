@@ -50,24 +50,43 @@ class SupervisorResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('group_id')
                             ->label(fn() => app()->getLocale() == 'id' ? 'Kelompok' : 'Group')
-                            ->relationship('group', 'name')   // ✅ otomatis ambil dari model Group
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->live(),
-                        Forms\Components\Select::make('student_id')
-                            ->label('Student')
-                            ->relationship('student', 'name') // langsung pakai relasi di model Assessment
+                            ->relationship('group', 'name')
                             ->searchable()
                             ->preload()
                             ->required()
                             ->live(),
 
+                        // [PERBAIKAN] Menambahkan afterStateUpdated agar form create juga interaktif
+                        Forms\Components\Select::make('student_id')
+                            ->label('Student')
+                            ->relationship('student', 'name', function (Builder $query, Forms\Get $get) {
+                                $groupId = $get('group_id');
+                                if (!$groupId) {
+                                    return $query->whereNull('group_id'); // atau handle sesuai kebutuhan
+                                }
+                                return $query->where('group_id', $groupId);
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function (Forms\Set $set, $state) {
+                                if ($student = \App\Models\Student::find($state)) {
+                                    $set('nim', $student->nim);
+                                    $set('title_of_the_final_project_proposal', $student->title_of_the_final_project_proposal);
+                                    $set('design_theme', $student->design_theme);
+                                } else {
+                                    $set('nim', null);
+                                    $set('title_of_the_final_project_proposal', null);
+                                    $set('design_theme', null);
+                                }
+                            }),
+
                         Forms\Components\TextInput::make('nim')
                             ->label('NIM')
                             ->readOnly()
                             ->dehydrated(false)
-                            ->afterStateHydrated(function ($set, $state, $record) {
+                            ->afterStateHydrated(function ($set, ?Assessment $record) {
                                 if ($record && $record->student) {
                                     $set('nim', $record->student->nim);
                                 }
@@ -77,7 +96,7 @@ class SupervisorResource extends Resource
                             ->label('Title of the Final Project Proposal')
                             ->readOnly()
                             ->dehydrated(false)
-                            ->afterStateHydrated(function ($set, $state, $record) {
+                            ->afterStateHydrated(function ($set, ?Assessment $record) {
                                 if ($record && $record->student) {
                                     $set('title_of_the_final_project_proposal', $record->student->title_of_the_final_project_proposal);
                                 }
@@ -87,7 +106,7 @@ class SupervisorResource extends Resource
                             ->label('Design Theme')
                             ->readOnly()
                             ->dehydrated(false)
-                            ->afterStateHydrated(function ($set, $state, $record) {
+                            ->afterStateHydrated(function ($set, ?Assessment $record) {
                                 if ($record && $record->student) {
                                     $set('design_theme', $record->student->design_theme);
                                 }

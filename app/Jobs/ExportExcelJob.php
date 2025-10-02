@@ -95,10 +95,11 @@ class ExportExcelJob
 {
     return [
         'Nama Mahasiswa',
-        'Judul Proposal',
+        'NIM',
+        'Judul Tugas Akhir',
+        'Group',
         'Assessment Stage',
         'Kriteria',
-        'Indikator',
         'Nilai',
         'Catatan',
     ];
@@ -110,10 +111,11 @@ private function prepareRows(Collection $records): Collection
         return $assessment->items->map(function ($item) use ($assessment) {
             return [
                 optional($assessment->student)->name ?? '-',
+                optional($assessment->student)->nim ?? '-',
                 optional($assessment->student)->title_of_the_final_project_proposal ?? '-',
+                optional($assessment->student->group)->name ?? '-',
                 $assessment->assessment_stage ?? '-',
                 $item->label ?? '-',       // Kriteria
-                $item->criteria ?? '-',    // Indikator
                 $item->score ?? '-',       // Nilai
                 $item->description ?? '-', // Catatan dari item
             ];

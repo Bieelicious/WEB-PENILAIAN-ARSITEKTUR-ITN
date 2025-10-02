@@ -237,150 +237,134 @@ class AssessmentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-    ->defaultGroup('student.name', 'desc')
-    ->columns([
-        Tables\Columns\TextColumn::make('student.name')
-            ->label('Name')
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('student.nim')
-            ->label('NIM')
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('student.title_of_the_final_project_proposal')
-            ->label('Title of the Final Project Proposal')
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('student.design_theme')
-            ->label('Design Theme')
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('student.group.name')
-            ->label('Group')
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('assessment_stage')
-            ->label('Assessment Stage')
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('assessment')
-            ->label('Total Score')
-            ->formatStateUsing(fn($state) => is_array($state) ? array_sum(array_map(fn($item) => (int)($item['score'] ?? 0), $state)) : 0)
-            ->searchable()
-            ->sortable(),
-        Tables\Columns\TextColumn::make('lecturer.name')
-            ->label('Lecturer')
-            ->hidden(fn() => !(Auth::user() instanceof User && Auth::user()->getRoleNames()->contains('super_admin')))
-            ->searchable()
-            ->sortable(),
-    ])
-    ->actions([
-        Tables\Actions\ViewAction::make(),
-        Tables\Actions\DeleteAction::make(),
-    ])
-    ->headerActions([
-        Tables\Actions\Action::make('export_excel')
-            ->label('Export Excel')
-            ->icon('heroicon-o-document-arrow-up')
-            ->modal()
-            ->modalWidth('sm')
-            ->form([
-                Forms\Components\Fieldset::make('Export Options')
-                    ->columns(1)
-                    ->schema([
-                        Forms\Components\Select::make('student_id')
-                            ->label('Select Student')
-                            ->preload()
-                            ->searchable()
-                            ->placeholder('Select Student')
-                            ->relationship('student', 'name')
-                            ->live()
-                            ->disabled(fn($get) => $get('export_all'))
-                            ->required(fn($get) => !$get('export_all')),
-                        Forms\Components\Checkbox::make('export_all')
-                            ->label('Export All Students')
-                            ->live()
-                            ->default(false),
-                    ])
+            ->defaultGroup('student.name', 'desc')
+            ->columns([
+                Tables\Columns\TextColumn::make('student.name')
+                    ->label('Name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('student.nim')
+                    ->label('NIM')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('student.title_of_the_final_project_proposal')
+                    ->label('Title of the Final Project Proposal')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('student.design_theme')
+                    ->label('Design Theme')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('student.group.name')
+                    ->label('Group')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('assessment_stage')
+                    ->label('Assessment Stage')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('assessment')
+                    ->label('Total Score')
+                    ->formatStateUsing(fn($state) => is_array($state) ? array_sum(array_map(fn($item) => (int) ($item['score'] ?? 0), $state)) : 0)
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('lecturer.name')
+                    ->label('Lecturer')
+                    ->hidden(fn() => !(Auth::user() instanceof User && Auth::user()->getRoleNames()->contains('super_admin')))
+                    ->searchable()
+                    ->sortable(),
             ])
-            ->action(function ($data) {
-                $user = Auth::check() ? Auth::user() : null;
-                $studentIds = $data['export_all'] ? [] : [$data['student_id']];
-
-                try {
-                    // Jalankan job langsung tanpa queue
-                    (new ExportExcelJob($studentIds, $user))->handle();
-
-                    Notification::make()
-                        ->title('Export Complete')
-                        ->body('The Excel has been generated. Check your notifications to download it.')
-                        ->success()
-                        ->send();
-                } catch (\Exception $e) {
-                    Notification::make()
-                        ->title('Export Failed')
-                        ->body('Error: ' . $e->getMessage())
-                        ->danger()
-                        ->send();
-                }
-            }),
-
-        Tables\Actions\Action::make('export_pdf')
-            ->label('Export PDF')
-            ->icon('heroicon-o-document-arrow-up')
-            ->color('danger')
-            ->modal()
-            ->modalWidth('sm')
-            ->form([
-                Forms\Components\Fieldset::make('Export Options')
-                    ->columns(1)
-                    ->schema([
-                        Forms\Components\Select::make('student_id')
-                            ->label('Select Student')
-                            ->preload()
-                            ->searchable()
-                            ->placeholder('Select Student')
-                            ->relationship('student', 'name')
-                            ->helperText('Export specific students')
-                            ->live()
-                            ->disabled(fn($get) => $get('export_all'))
-                            ->required(fn($get) => !$get('export_all')),
-                        Forms\Components\Checkbox::make('export_all')
-                            ->label('Export All Students')
-                            ->live()
-                            ->default(false),
-                    ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
-            ->action(function ($data) {
-                $user = Auth::check() ? Auth::user() : null;
-                $studentIds = $data['export_all'] ? [] : [$data['student_id']];
+            ->headerActions([
+                Tables\Actions\Action::make('export_excel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->modal()
+                    ->modalWidth('sm')
+                    ->form([
+                        Forms\Components\Fieldset::make('Export Options')
+                            ->columns(1)
+                            ->schema([
+                                Forms\Components\Select::make('student_id')
+                                    ->label('Select Student')
+                                    ->preload()
+                                    ->searchable()
+                                    ->placeholder('Select Student')
+                                    ->relationship('student', 'name')
+                                    ->live()
+                                    ->disabled(fn($get) => $get('export_all'))
+                                    ->required(fn($get) => !$get('export_all')),
+                                Forms\Components\Checkbox::make('export_all')
+                                    ->label('Export All Students')
+                                    ->live()
+                                    ->default(false),
+                            ])
+                    ])
+                    ->action(function ($data) {
+                        $studentIds = $data['export_all'] ? [] : [$data['student_id']];
+                        $user = Auth::user();
 
-                try {
-                    // Jalankan job langsung tanpa queue
-                    (new ExportPdfJob($studentIds, $user))->handle();
+                        // Mengirim Job ke antrian (queue)
+                        ExportExcelJob::dispatch($studentIds, $user);
 
-                    Notification::make()
-                        ->title('Export Complete')
-                        ->body('The PDF has been generated. Check your notifications to download it.')
-                        ->success()
-                        ->send();
-                } catch (\Exception $e) {
-                    Notification::make()
-                        ->title('Export Failed')
-                        ->body('Error: ' . $e->getMessage())
-                        ->danger()
-                        ->send();
-                }
-            }),
-    ])
-    ->bulkActions([
-        Tables\Actions\BulkActionGroup::make([
-            Tables\Actions\DeleteBulkAction::make(),
-        ]),
-    ]);
-}
+                        // Memberi notifikasi instan kepada pengguna
+                        Notification::make()
+                            ->title('Export Started')
+                            ->body('Generating your Excel report. You will be notified when it is ready to download.')
+                            ->success()
+                            ->send();
+                    }),
 
+                Tables\Actions\Action::make('export_pdf')
+                    ->label('Export PDF')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->color('danger')
+                    ->modal()
+                    ->modalWidth('sm')
+                    ->form([
+                        Forms\Components\Fieldset::make('Export Options')
+                            ->columns(1)
+                            ->schema([
+                                Forms\Components\Select::make('student_id')
+                                    ->label('Select Student')
+                                    ->preload()
+                                    ->searchable()
+                                    ->placeholder('Select Student')
+                                    ->relationship('student', 'name')
+                                    ->helperText('Export specific students')
+                                    ->live()
+                                    ->disabled(fn($get) => $get('export_all'))
+                                    ->required(fn($get) => !$get('export_all')),
+                                Forms\Components\Checkbox::make('export_all')
+                                    ->label('Export All Students')
+                                    ->live()
+                                    ->default(false),
+                            ])
+                    ])
+                    ->action(function ($data) {
+                        $studentIds = $data['export_all'] ? [] : [$data['student_id']];
+                        $user = Auth::user();
 
+                        // Mengirim Job ke antrian (queue)
+                        ExportPdfJob::dispatch($studentIds, $user);
+
+                        // Memberi notifikasi instan kepada pengguna
+                        Notification::make()
+                            ->title('Export Started')
+                            ->body('Generating your PDF report. You will be notified when it is ready to download.')
+                            ->success()
+                            ->send();
+                    }),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
 
     public static function canCreate(): bool
     {
