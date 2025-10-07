@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "122f4819357c9c68d7f0866c49c0186c",
+    "content-hash": "09f8d79d2e1fc9781fb55fc7f6b88a6d",
     "packages": [
         {
             "name": "andreia/filament-nord-theme",
@@ -210,16 +210,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.356.28",
+            "version": "3.356.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "aaf809461033836d120f3bbf7a4cf67e946281d1"
+                "reference": "b93da7b0eeec09b220daa9b598a94832f99cefa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/aaf809461033836d120f3bbf7a4cf67e946281d1",
-                "reference": "aaf809461033836d120f3bbf7a4cf67e946281d1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b93da7b0eeec09b220daa9b598a94832f99cefa7",
+                "reference": "b93da7b0eeec09b220daa9b598a94832f99cefa7",
                 "shasum": ""
             },
             "require": {
@@ -301,9 +301,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.28"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.356.33"
             },
-            "time": "2025-09-29T18:04:14+00:00"
+            "time": "2025-10-06T19:01:41+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -1934,7 +1934,7 @@
         },
         {
             "name": "filament/actions",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/actions.git",
@@ -1987,7 +1987,7 @@
         },
         {
             "name": "filament/filament",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/panels.git",
@@ -2052,16 +2052,16 @@
         },
         {
             "name": "filament/forms",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
-                "reference": "3a42f619157c6101c3f5a4d0620f05bd9c687d62"
+                "reference": "da5401bf3684b6abc6cf1d8e152f01b25d815319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/forms/zipball/3a42f619157c6101c3f5a4d0620f05bd9c687d62",
-                "reference": "3a42f619157c6101c3f5a4d0620f05bd9c687d62",
+                "url": "https://api.github.com/repos/filamentphp/forms/zipball/da5401bf3684b6abc6cf1d8e152f01b25d815319",
+                "reference": "da5401bf3684b6abc6cf1d8e152f01b25d815319",
                 "shasum": ""
             },
             "require": {
@@ -2104,11 +2104,11 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2025-09-28T22:06:25+00:00"
+            "time": "2025-10-06T21:42:10+00:00"
         },
         {
             "name": "filament/infolists",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/infolists.git",
@@ -2159,7 +2159,7 @@
         },
         {
             "name": "filament/notifications",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/notifications.git",
@@ -2211,7 +2211,7 @@
         },
         {
             "name": "filament/spatie-laravel-media-library-plugin",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/spatie-laravel-media-library-plugin.git",
@@ -2249,7 +2249,7 @@
         },
         {
             "name": "filament/spatie-laravel-settings-plugin",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/spatie-laravel-settings-plugin.git",
@@ -2296,7 +2296,7 @@
         },
         {
             "name": "filament/support",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/support.git",
@@ -2355,7 +2355,7 @@
         },
         {
             "name": "filament/tables",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
@@ -2407,7 +2407,7 @@
         },
         {
             "name": "filament/widgets",
-            "version": "v3.3.42",
+            "version": "v3.3.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/widgets.git",
@@ -2995,16 +2995,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.3.5",
+            "version": "v1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "fbf1a3e81d61b088e7af723fb3c7a4ee92ac7e34"
+                "reference": "61f2ef1ad2d0ae922c265931cb0a8032a1ed2813"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/fbf1a3e81d61b088e7af723fb3c7a4ee92ac7e34",
-                "reference": "fbf1a3e81d61b088e7af723fb3c7a4ee92ac7e34",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/61f2ef1ad2d0ae922c265931cb0a8032a1ed2813",
+                "reference": "61f2ef1ad2d0ae922c265931cb0a8032a1ed2813",
                 "shasum": ""
             },
             "require": {
@@ -3041,9 +3041,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.3.5"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.3.6"
             },
-            "time": "2025-06-11T17:58:05+00:00"
+            "time": "2025-09-30T16:22:43+00:00"
         },
         {
             "name": "jeffgreco13/filament-breezy",
@@ -3262,16 +3262,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.46.0",
+            "version": "v11.46.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "2c6d85f22d08123ad45aa3a6726b16f06e68eecd"
+                "reference": "5fd457f807570a962a53b403b1346efe4cc80bb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/2c6d85f22d08123ad45aa3a6726b16f06e68eecd",
-                "reference": "2c6d85f22d08123ad45aa3a6726b16f06e68eecd",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5fd457f807570a962a53b403b1346efe4cc80bb8",
+                "reference": "5fd457f807570a962a53b403b1346efe4cc80bb8",
                 "shasum": ""
             },
             "require": {
@@ -3473,7 +3473,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-09-08T21:54:34+00:00"
+            "time": "2025-09-30T14:51:32+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -3852,16 +3852,16 @@
         },
         {
             "name": "league/csv",
-            "version": "9.25.0",
+            "version": "9.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "f856f532866369fb1debe4e7c5a1db185f40ef86"
+                "reference": "7fce732754d043f3938899e5183e2d0f3d31b571"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/f856f532866369fb1debe4e7c5a1db185f40ef86",
-                "reference": "f856f532866369fb1debe4e7c5a1db185f40ef86",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/7fce732754d043f3938899e5183e2d0f3d31b571",
+                "reference": "7fce732754d043f3938899e5183e2d0f3d31b571",
                 "shasum": ""
             },
             "require": {
@@ -3939,7 +3939,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-11T08:29:08+00:00"
+            "time": "2025-10-01T11:24:54+00:00"
         },
         {
             "name": "league/flysystem",
@@ -12638,7 +12638,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
