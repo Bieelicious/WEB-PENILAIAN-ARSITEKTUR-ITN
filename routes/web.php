@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 Route::get('/', function () {
-    return redirect('/lecturer');
+    return redirect('/lecturer/login');
 });
 
 Route::get('/download-excel/{filename}', function ($filename) {
